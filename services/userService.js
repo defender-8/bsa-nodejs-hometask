@@ -3,6 +3,9 @@ const { UserRepository } = require('../repositories/userRepository');
 class UserService {
 
     // TODO: Implement methods to work with user
+    get() {
+        return UserRepository.getAll();
+    }
 
     search(search) {
         const item = UserRepository.getOne(search);

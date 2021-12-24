@@ -6,6 +6,28 @@ const { responseMiddleware } = require('../middlewares/response.middleware');
 const router = Router();
 
 // TODO: Implement route controllers for user
+router.get('/', (req, res, next) => {
+  try {
+    const users = UserService.get();
+    res.data = ({ users });
+  } catch (err) {
+    res.err = err;
+  } finally {
+    next();
+  }
+}, responseMiddleware);
+
+router.get('/:id', (req, res, next) => {
+  try {
+    const user = UserService.search({id: req.params.id});
+    res.data = ({ user });
+  } catch (err) {
+    res.err = err;
+  } finally {
+    next();
+  }
+}, responseMiddleware);
+
 router.post('/', createUserValid, (req, res, next) => {
   const { err } = res;
   try {
