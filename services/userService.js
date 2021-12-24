@@ -4,7 +4,11 @@ class UserService {
 
     // TODO: Implement methods to work with user
     get() {
-        return UserRepository.getAll();
+        const items = UserRepository.getAll();
+        if (!items) {
+            return null;
+        }
+        return items;
     }
 
     search(search) {
@@ -20,7 +24,15 @@ class UserService {
     }
 
     updateOne(id, dataToUpdate) {
-        UserRepository.update(id, dataToUpdate);
+        if (!this.search({id})) {
+            return null;
+        }
+
+        const updatedItem = UserRepository.update(id, dataToUpdate);
+        if (!updatedItem) {
+            return null;
+        }
+        return updatedItem
     }
 
     deleteOne(id) {
