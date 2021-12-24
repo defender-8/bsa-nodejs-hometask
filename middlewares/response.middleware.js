@@ -3,7 +3,13 @@ const responseMiddleware = (req, res, next) => {
     const { data, err } = res;
 
     if (err) {
-        res.status(err.statusCode || 500).json({ error: true, message: err.message });
+        if (!err.statusCode) console.log(err);
+
+        res.status(err.statusCode || 500)
+          .json({
+              error: true,
+              message: err.statusCode ? err.message : 'Internal Server Error!'
+          });
     } else {
         res.status(200).json({ data });
     }

@@ -9,13 +9,6 @@ const router = Router();
 router.get('/', (req, res, next) => {
   try {
     const users = UserService.get();
-
-    if (!users) {
-      const err = new Error('Users are not found!');
-      err.statusCode = 404;
-      throw err;
-    }
-
     res.data = ({ users });
   } catch (err) {
     res.err = err;
@@ -27,13 +20,6 @@ router.get('/', (req, res, next) => {
 router.get('/:id', (req, res, next) => {
   try {
     const user = UserService.search({id: req.params.id});
-
-    if (!user) {
-      const err = new Error('User is not found!');
-      err.statusCode = 404;
-      throw err;
-    }
-
     res.data = ({ user });
   } catch (err) {
     res.err = err;
@@ -59,15 +45,7 @@ router.put('/:id', updateUserValid, (req, res, next) => {
   const { err } = res;
   try {
     if (err) throw err;
-
     const updatedUser = UserService.updateOne(req.params.id, req.body);
-
-    if (!updatedUser) {
-      const err = new Error('User cannot be updated!');
-      err.statusCode = 400;
-      throw err;
-    }
-
     res.data = ({message: 'User has been successfully updated'});
   } catch (err) {
     res.err = err;
@@ -79,13 +57,6 @@ router.put('/:id', updateUserValid, (req, res, next) => {
 router.delete('/:id', (req, res, next) => {
   try {
     const removedUser = UserService.deleteOne(req.params.id);
-
-    if (!removedUser) {
-      const err = new Error('User cannot be removed!');
-      err.statusCode = 400;
-      throw err;
-    }
-
     res.data = ({message: 'User has been successfully removed'});
   } catch (err) {
     res.err = err;

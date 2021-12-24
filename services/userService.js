@@ -6,15 +6,19 @@ class UserService {
     get() {
         const items = UserRepository.getAll();
         if (!items) {
-            return null;
+            const err = new Error('Users cannot be fetched!');
+            err.statusCode = 404;
+            throw err;
         }
-        return items;
+        return UserRepository.getAll();
     }
 
     search(search) {
         const item = UserRepository.getOne(search);
         if(!item) {
-            return null;
+            const err = new Error('User is not found!');
+            err.statusCode = 404;
+            throw err;
         }
         return item;
     }
@@ -22,12 +26,12 @@ class UserService {
     createOne(data) {
         const {email, phoneNumber, ...restValues} = data;
 
-        if (this.search({email: email.toLowerCase()})) {
+        if (UserRepository.getOne({ email: email.toLowerCase() })) {
             const err = new Error('User with this email already exists!');
             err.statusCode = 400;
             throw err;
         }
-        if (this.search({phoneNumber})) {
+        if (UserRepository.getOne({ phoneNumber })) {
             const err = new Error('User with this phone number already exists!');
             err.statusCode = 400;
             throw err;
@@ -37,8 +41,10 @@ class UserService {
     }
 
     updateOne(id, dataToUpdate) {
-        if (!this.search({id})) {
-            return null;
+        if (!UserRepository.getOne({id})) {
+            const err = new Error('User is not found!');
+            err.statusCode = 400;
+            throw err;
         }
 
         if (dataToUpdate.email) {
@@ -47,19 +53,25 @@ class UserService {
 
         const updatedItem = UserRepository.update(id, dataToUpdate);
         if (!updatedItem) {
-            return null;
+            const err = new Error('User cannot be updated!');
+            err.statusCode = 400;
+            throw err;
         }
         return updatedItem
     }
 
     deleteOne(id) {
-       if (!this.search({id})) {
-           return null;
+       if (!UserRepository.getOne({id})) {
+           const err = new Error('User is not found!');
+           err.statusCode = 400;
+           throw err;
        }
 
        const removedItem = UserRepository.delete(id);
        if (!removedItem) {
-           return null;
+           const err = new Error('User cannot be removed!');
+           err.statusCode = 400;
+           throw err;
        }
        return removedItem;
     }
