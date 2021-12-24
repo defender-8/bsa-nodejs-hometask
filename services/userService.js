@@ -22,6 +22,10 @@ class UserService {
     updateOne(id, dataToUpdate) {
         UserRepository.update(id, dataToUpdate);
     }
+
+    deleteOne(id) {
+        UserRepository.delete(id);
+    }
 }
 
 module.exports = new UserService();

@@ -54,4 +54,15 @@ router.put('/:id', updateUserValid, (req, res, next) => {
   }
 }, responseMiddleware);
 
+router.delete('/:id', (req, res, next) => {
+  try {
+    UserService.deleteOne(req.params.id);
+    res.data = ({message: 'User has been successfully removed'});
+  } catch (err) {
+    res.err = err;
+  } finally {
+    next();
+  }
+}, responseMiddleware);
+
 module.exports = router;
