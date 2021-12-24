@@ -15,6 +15,10 @@ class UserService {
     createOne(data) {
         UserRepository.create(data);
     }
+
+    updateOne(id, dataToUpdate) {
+        UserRepository.update(id, dataToUpdate);
+    }
 }
 
 module.exports = new UserService();

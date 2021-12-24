@@ -15,6 +15,10 @@ const createUserValid = (req, res, next) => {
 
 const updateUserValid = (req, res, next) => {
     // TODO: Implement validator for user entity during update
+    const data = req.body;
+    const { firstName, lastName, email, phoneNumber, password } = data;
+
+    validator.areValuesRequired(res, data);
 
     next();
 };

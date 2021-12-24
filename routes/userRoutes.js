@@ -19,4 +19,17 @@ router.post('/', createUserValid, (req, res, next) => {
   }
 }, responseMiddleware);
 
+router.put('/:id', updateUserValid, (req, res, next) => {
+  const { err } = res;
+  try {
+    if (err) throw err;
+    UserService.updateOne(req.params.id, req.body);
+    res.data = ({message: 'User has been successfully updated'});
+  } catch (err) {
+    res.err = err;
+  } finally {
+    next();
+  }
+}, responseMiddleware);
+
 module.exports = router;
