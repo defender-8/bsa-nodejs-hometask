@@ -35,5 +35,6 @@
     "mocha": "^7.1.1",
     "request": "^2.88.2",
     "uuid": "^7.0.3"
-  }
+  },
+  "devDependencies": {}
 }

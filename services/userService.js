@@ -11,6 +11,10 @@ class UserService {
         }
         return item;
     }
+
+    createOne(data) {
+        UserRepository.create(data);
+    }
 }
 
 module.exports = new UserService();
