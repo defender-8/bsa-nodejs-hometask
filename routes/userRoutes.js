@@ -78,7 +78,14 @@ router.put('/:id', updateUserValid, (req, res, next) => {
 
 router.delete('/:id', (req, res, next) => {
   try {
-    UserService.deleteOne(req.params.id);
+    const removedUser = UserService.deleteOne(req.params.id);
+
+    if (!removedUser) {
+      const err = new Error('User cannot be removed!');
+      err.statusCode = 400;
+      throw err;
+    }
+
     res.data = ({message: 'User has been successfully removed'});
   } catch (err) {
     res.err = err;

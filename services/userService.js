@@ -23,7 +23,7 @@ class UserService {
         const {email, phoneNumber, ...restValues} = data;
 
         if (this.search({email: email.toLowerCase()})) {
-            const err = new Error('User with these email already exists!');
+            const err = new Error('User with this email already exists!');
             err.statusCode = 400;
             throw err;
         }
@@ -53,7 +53,15 @@ class UserService {
     }
 
     deleteOne(id) {
-        UserRepository.delete(id);
+       if (!this.search({id})) {
+           return null;
+       }
+
+       const removedItem = UserRepository.delete(id);
+       if (!removedItem) {
+           return null;
+       }
+       return removedItem;
     }
 }
 
