@@ -32,8 +32,11 @@ router.post('/', createFighterValid, (req, res, next) => {
   const { err } = res;
   try {
     if (err) throw err;
-    FighterService.createOne(req.body);
-    res.data = ({message: 'Fighter has been successfully created'});
+    const fighter = FighterService.createOne(req.body);
+    res.data = ({
+      message: 'Fighter has been successfully created',
+      fighter,
+    });
   } catch (err) {
     res.err = err;
   } finally {
@@ -46,7 +49,10 @@ router.put('/:id', updateFighterValid, (req, res, next) => {
   try {
     if (err) throw err;
     const updatedFighter = FighterService.updateOne(req.params.id, req.body);
-    res.data = ({message: 'Fighter has been successfully updated'});
+    res.data = ({
+      message: 'Fighter has been successfully updated',
+      updatedFighter,
+    });
   } catch (err) {
     res.err = err;
   } finally {
@@ -57,7 +63,10 @@ router.put('/:id', updateFighterValid, (req, res, next) => {
 router.delete('/:id', (req, res, next) => {
   try {
     const removedFighter = FighterService.deleteOne(req.params.id);
-    res.data = ({message: 'Fighter has been successfully removed'});
+    res.data = ({
+      message: 'Fighter has been successfully removed',
+      removedFighter,
+    });
   } catch (err) {
     res.err = err;
   } finally {

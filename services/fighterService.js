@@ -34,7 +34,7 @@ class FighterService {
 
     data.health = health || 100;
 
-    FighterRepository.create({searchName, ...data});
+    return FighterRepository.create({searchName, ...data});
   }
 
   updateOne(id, dataToUpdate) {
@@ -45,7 +45,15 @@ class FighterService {
     }
 
     if (dataToUpdate.name) {
-      dataToUpdate.searchName = dataToUpdate.name.toLowerCase();
+      const searchName = dataToUpdate.name.toLowerCase();
+
+      if (FighterRepository.getOne({ searchName })) {
+        const err = new Error('User with this name already exists!');
+        err.statusCode = 400;
+        throw err;
+      }
+
+      dataToUpdate.searchName = searchName;
     }
 
     const updatedItem = FighterRepository.update(id, dataToUpdate);
@@ -64,13 +72,13 @@ class FighterService {
       throw err;
     }
 
-    const removedItem = FighterRepository.delete(id);
-    if (!removedItem) {
+    const result = FighterRepository.delete(id);
+    if (!result) {
       const err = new Error('Fighter cannot be removed!');
       err.statusCode = 400;
       throw err;
     }
-    return removedItem;
+    return result[0];
   }
 }
 
