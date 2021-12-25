@@ -37,7 +37,7 @@ class UserService {
             throw err;
         }
 
-        UserRepository.create({email: email.toLowerCase(), phoneNumber, ...restValues});
+        return UserRepository.create({email: email.toLowerCase(), phoneNumber, ...restValues});
     }
 
     updateOne(id, dataToUpdate) {
@@ -67,13 +67,13 @@ class UserService {
            throw err;
        }
 
-       const removedItem = UserRepository.delete(id);
-       if (!removedItem) {
+       const result = UserRepository.delete(id);
+       if (!result) {
            const err = new Error('User cannot be removed!');
            err.statusCode = 400;
            throw err;
        }
-       return removedItem;
+       return result[0];
     }
 }
 

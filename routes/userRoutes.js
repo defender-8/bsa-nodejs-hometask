@@ -32,8 +32,11 @@ router.post('/', createUserValid, (req, res, next) => {
   const { err } = res;
   try {
     if (err) throw err;
-    UserService.createOne(req.body);
-    res.data = ({message: 'User has been successfully created'});
+    const user = UserService.createOne(req.body);
+    res.data = ({
+      message: 'User has been successfully created',
+      user,
+    });
   } catch (err) {
     res.err = err;
   } finally {
@@ -46,7 +49,10 @@ router.put('/:id', updateUserValid, (req, res, next) => {
   try {
     if (err) throw err;
     const updatedUser = UserService.updateOne(req.params.id, req.body);
-    res.data = ({message: 'User has been successfully updated'});
+    res.data = ({
+      message: 'User has been successfully updated',
+      updatedUser,
+    });
   } catch (err) {
     res.err = err;
   } finally {
@@ -57,7 +63,10 @@ router.put('/:id', updateUserValid, (req, res, next) => {
 router.delete('/:id', (req, res, next) => {
   try {
     const removedUser = UserService.deleteOne(req.params.id);
-    res.data = ({message: 'User has been successfully removed'});
+    res.data = ({
+      message: 'User has been successfully removed',
+      removedUser,
+    });
   } catch (err) {
     res.err = err;
   } finally {
