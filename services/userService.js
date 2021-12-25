@@ -41,7 +41,7 @@ class UserService {
     }
 
     updateOne(id, dataToUpdate) {
-        if (!UserRepository.getOne({id})) {
+        if (!UserRepository.getOne({ id })) {
             const err = new Error('User is not found!');
             err.statusCode = 400;
             throw err;
