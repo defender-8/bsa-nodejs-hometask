@@ -1,24 +1,32 @@
 const { fighter } = require('../models/fighter');
 const { BaseValidator } = require('./base.validation');
 
-const validator = new BaseValidator(fighter);
-
 const createFighterValid = (req, res, next) => {
     // TODO: Implement validator for fighter entity during creation
-    const data = req.body;
-    const { name, health, power, defense } = data;
-
-    validator.areValuesRequired(res, data);
-
-    next();
-}
+    fighterValid(req, res, next);
+};
 
 const updateFighterValid = (req, res, next) => {
     // TODO: Implement validator for fighter entity during update
-    const data = req.body;
-    const { name, health, power, defense } = data;
+    fighterValid(req, res, next);
+};
 
-    validator.areValuesRequired(res, data);
+function fighterValid(req, res, next) {
+    const data = req.body;
+    const { health, power, defense } = data;
+
+    const validator = new BaseValidator(fighter, res, data);
+
+    const isValidationError = validator.isNotDeclaredValues()
+      || validator.isIdInsideReqBody()
+      || validator.isEmptyRequiredField()
+      || validator.isInRange('Power', power, 1, 100)
+      || validator.isInRange('Defense', defense, 1, 10)
+      || validator.isInRange('Health', health, 80, 120);
+
+    if (isValidationError) {
+        next();
+    }
 
     next();
 }

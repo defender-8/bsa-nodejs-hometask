@@ -1,22 +1,48 @@
 class BaseValidator {
-  constructor(dataModel) {
+  constructor(dataModel, res, data) {
     this.dataModel = dataModel;
+    this.res = res;
+    this.data = data;
   }
 
-  areValuesRequired(res, data) {
-    const isValueRequired = (value, title) => {
-      if (!value) {
-        const err = new Error(`${title} is required!`);
+  isNotDeclaredValues() {
+    for (let key of Object.keys(this.data)) {
+      if (!Object.keys(this.dataModel).includes(key)) {
+        const err = new Error(`${key} is not declared field!`);
         err.statusCode = 400;
-        res.err = err;
+        this.res.err = err;
+        return true;
       }
-    };
+    }
+  }
 
-    Object.entries(data).forEach(([key, value]) => {
-      if (this.dataModel[key].isRequired) {
-        isValueRequired(value, capitalize(key));
+  isIdInsideReqBody() {
+    if (Object.keys(this.data).includes('id')) {
+      const err = new Error('Id field inside request body is forbidden!');
+      err.statusCode = 400;
+      this.res.err = err;
+      return true;
+    }
+  }
+
+  isEmptyRequiredField() {
+    for (let key of Object.keys(this.dataModel)) {
+      if (this.dataModel[key].isRequired && !this.data[key]) {
+        const err = new Error(`${capitalize(key)} is required!`);
+        err.statusCode = 400;
+        this.res.err = err;
+        return true;
       }
-    });
+    }
+  }
+
+  isInRange(name, value, min, max) {
+    if (value <= min || value >= max) {
+      const err = new Error(`${name} must be more than ${min} and less than ${max}`);
+      err.statusCode = 400;
+      this.res.err = err;
+      return true;
+    }
   }
 }
 

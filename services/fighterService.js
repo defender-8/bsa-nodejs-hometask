@@ -23,7 +23,7 @@ class FighterService {
   }
 
   createOne(data) {
-    const { name } = data;
+    const { name, health } = data;
     const searchName = name.toLowerCase();
 
     if (FighterRepository.getOne({ searchName })) {
@@ -31,6 +31,8 @@ class FighterService {
       err.statusCode = 400;
       throw err;
     }
+
+    data.health = health || 100;
 
     FighterRepository.create({searchName, ...data});
   }
@@ -40,6 +42,10 @@ class FighterService {
       const err = new Error('Fighter is not found!');
       err.statusCode = 400;
       throw err;
+    }
+
+    if (dataToUpdate.name) {
+      dataToUpdate.searchName = dataToUpdate.name.toLowerCase();
     }
 
     const updatedItem = FighterRepository.update(id, dataToUpdate);
