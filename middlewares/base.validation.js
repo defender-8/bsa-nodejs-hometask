@@ -44,6 +44,33 @@ class BaseValidator {
       return true;
     }
   }
+
+  isValidEmail(email) {
+    if(!email.toLowerCase().endsWith('@gmail.com')) {
+      const err = new Error('Email must be valid Gmail email!');
+      err.statusCode = 400;
+      this.res.err = err;
+      return true;
+    }
+  }
+
+  isValidPhoneNumber(phoneNumber) {
+    if (!phoneNumber.startsWith('+380') || phoneNumber.length !== 13) {
+      const err = new Error('Enter valid phone number: +380xxxxxxxxx');
+      err.statusCode = 400;
+      this.res.err = err;
+      return true;
+    }
+  }
+
+  isValidPassword(password) {
+    if (password.length < 3 || password.length > 20) {
+      const err = new Error('Password must be 3-20 characters long!');
+      err.statusCode = 400;
+      this.res.err = err;
+      return true;
+    }
+  }
 }
 
 function capitalize(camelCaseStr) {

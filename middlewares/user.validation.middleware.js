@@ -1,27 +1,35 @@
 const { user } = require('../models/user');
 const { BaseValidator } = require('./base.validation');
 
-const validator = new BaseValidator(user);
-
 const createUserValid = (req, res, next) => {
     // TODO: Implement validator for user entity during creation
-    const data = req.body;
-    const { firstName, lastName, email, phoneNumber, password } = data;
-
-    validator.areValuesRequired(res, data);
-
-    next();
+    userValid(req, res, next);
 };
 
 const updateUserValid = (req, res, next) => {
     // TODO: Implement validator for user entity during update
-    const data = req.body;
-    const { firstName, lastName, email, phoneNumber, password } = data;
+    userValid(req, res, next);
+};
 
-    validator.areValuesRequired(res, data);
+function userValid(req, res, next) {
+    const data = req.body;
+    const { email, phoneNumber, password } = data;
+
+    const validator = new BaseValidator(user, res, data);
+
+    const isValidationError = validator.isNotDeclaredValues()
+      || validator.isIdInsideReqBody()
+      || validator.isEmptyRequiredField()
+      || validator.isValidEmail(email)
+      || validator.isValidPhoneNumber(phoneNumber)
+      || validator.isValidPassword(password);
+
+    if (isValidationError) {
+        next();
+    }
 
     next();
-};
+}
 
 exports.createUserValid = createUserValid;
 exports.updateUserValid = updateUserValid;
